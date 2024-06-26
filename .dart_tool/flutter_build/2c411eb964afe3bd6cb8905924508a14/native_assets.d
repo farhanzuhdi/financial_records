@@ -1,0 +1,1 @@
+ /home/farhanzuhdi/flutter/financial_records/.dart_tool/flutter_build/2c411eb964afe3bd6cb8905924508a14/native_assets.yaml: 
