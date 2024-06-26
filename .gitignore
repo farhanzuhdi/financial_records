@@ -10,6 +10,8 @@ linux
 macos
 web
 windows
+.dart_tool
+.vscode
 
 # Log/OS Files
 *.log
