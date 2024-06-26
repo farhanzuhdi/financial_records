@@ -6,6 +6,10 @@ build/
 local.properties
 .flutter-plugins
 .flutter-plugins-dependencies
+linux
+macos
+web
+windows
 
 # Log/OS Files
 *.log
