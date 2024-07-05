@@ -1,0 +1,219 @@
+import 'dart:convert';
+
+import 'package:financial_records/core/fr_models.dart/dropdown_item.dart';
+import 'package:financial_records/core/fr_models.dart/list_item.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:money_formatter/money_formatter.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+
+class FRFunction {
+  Future<List<ItemDropdown>> getListCategory(BuildContext context) async {
+    DatabaseReference databaseReferenceCategory =
+        FirebaseDatabase.instance.ref().child('category');
+    List<ItemDropdown> returnData = [];
+    try {
+      final data = databaseReferenceCategory.once();
+      await data.then((event) {
+        DataSnapshot dataSnapshot = event.snapshot;
+        for (var element in dataSnapshot.children) {
+          returnData.add(ItemDropdown(
+              id: element.key.toString(), name: element.value.toString()));
+        }
+      });
+      return returnData;
+    } catch (e) {
+      snackbarError(
+          context: !context.mounted ? context : context, message: e.toString());
+      return returnData;
+    }
+  }
+
+  Future<List<ItemDropdown>> getListType(BuildContext context) async {
+    DatabaseReference databaseReferenceType =
+        FirebaseDatabase.instance.ref().child('type');
+    List<ItemDropdown> returnData = [];
+    try {
+      final data = databaseReferenceType.once();
+      await data.then((event) {
+        DataSnapshot dataSnapshot = event.snapshot;
+        for (var element in dataSnapshot.children) {
+          returnData.add(ItemDropdown(
+              id: element.key.toString(), name: element.value.toString()));
+        }
+      });
+      return returnData;
+    } catch (e) {
+      snackbarError(
+          context: !context.mounted ? context : context, message: e.toString());
+      return returnData;
+    }
+  }
+
+  Future<List<ItemList>> getListData(
+      {required BuildContext context,
+      required String month,
+      required String year,
+      required String categoryName}) async {
+    DatabaseReference databaseReferenceData =
+        FirebaseDatabase.instance.ref().child('data');
+    List<ItemList> returnData = [];
+    String monthString = '';
+    if (month.length < 2) {
+      monthString = '0$month';
+    } else {
+      monthString = month;
+    }
+    String endDay =
+        getDaysInMonth(int.parse(year), int.parse(month)).toString();
+    String start = '$year-$monthString-01 00:00:00';
+    String end = '$year-$monthString-$endDay 23:59:59';
+    try {
+      final data = databaseReferenceData
+          .orderByChild('date')
+          .startAt(start)
+          .endAt(end)
+          .once();
+      await data.then((event) {
+        DataSnapshot dataSnapshot = event.snapshot;
+        for (var element in dataSnapshot.children) {
+          ItemList data =
+              ItemList.fromJson(jsonDecode(jsonEncode(element.value)));
+          if (data.category.name == categoryName) {
+            returnData.add(data);
+          }
+        }
+      });
+
+      return returnData;
+    } catch (e) {
+      snackbarError(
+          context: !context.mounted ? context : context, message: e.toString());
+      return returnData;
+    }
+  }
+
+  Future<bool> addData(
+      {required BuildContext context,
+      required ItemDropdown category,
+      required ItemDropdown type,
+      required String nominal,
+      required String notes}) async {
+    DatabaseReference databaseReferenceData =
+        FirebaseDatabase.instance.ref().child('data');
+    DateTime nowFormat = DateTime.now();
+    var formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(nowFormat);
+    try {
+      await databaseReferenceData.child('$formattedDate ${category.id}').set({
+        'date': formattedDate,
+        'category': category.toJson(),
+        'type': type.toJson(),
+        'nominal': nominal,
+        'notes': notes
+      });
+      return true;
+    } catch (e) {
+      snackbarError(
+          context: !context.mounted ? context : context, message: e.toString());
+      return false;
+    }
+  }
+
+  String moneyFormatter(String value) {
+    MoneyFormatter formatter = MoneyFormatter(
+        amount: int.parse(value).toDouble(),
+        settings: MoneyFormatterSettings(
+          symbol: 'IDR',
+          thousandSeparator: '.',
+          decimalSeparator: ',',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 3,
+          compactFormatType: CompactFormatType.long,
+        ));
+    return formatter.output.withoutFractionDigits;
+  }
+
+  int getDaysInMonth(int year, int month) {
+    if (month == DateTime.february) {
+      final bool isLeapYear =
+          (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0);
+      return isLeapYear ? 29 : 28;
+    }
+    const List<int> daysInMonth = <int>[
+      31,
+      -1,
+      31,
+      30,
+      31,
+      30,
+      31,
+      31,
+      30,
+      31,
+      30,
+      31
+    ];
+    return daysInMonth[month - 1];
+  }
+
+  Future<List> getLast10Year() async {
+    List result = [];
+    for (int i = 0; i < 10; i++) {
+      result.add((DateTime.now().year - i).toString());
+    }
+    return result;
+  }
+
+  Future<List<ItemDropdown>> getMonth(BuildContext context) async {
+    DatabaseReference databaseReferenceMonth =
+        FirebaseDatabase.instance.ref().child('month');
+    List<ItemDropdown> returnData = [];
+    try {
+      final data = databaseReferenceMonth.once();
+      await data.then((event) {
+        DataSnapshot dataSnapshot = event.snapshot;
+        for (var element in dataSnapshot.children) {
+          returnData.add(ItemDropdown(
+              id: element.key.toString(), name: element.value.toString()));
+        }
+      });
+      return returnData;
+    } catch (e) {
+      snackbarError(
+          context: !context.mounted ? context : context, message: e.toString());
+      return returnData;
+    }
+  }
+
+  void snackbarSuccess(
+      {required BuildContext context, required String message}) {
+    showTopSnackBar(
+      Overlay.of(context),
+      CustomSnackBar.success(message: message),
+      animationDuration: const Duration(milliseconds: 3000),
+    );
+  }
+
+  void snackbarError({required BuildContext context, required String message}) {
+    showTopSnackBar(
+      Overlay.of(context),
+      CustomSnackBar.error(message: message),
+      animationDuration: const Duration(milliseconds: 3000),
+    );
+  }
+
+  void snackbarWarning(
+      {required BuildContext context, required String message}) {
+    showTopSnackBar(
+      Overlay.of(context),
+      CustomSnackBar.info(message: message),
+      animationDuration: const Duration(milliseconds: 3000),
+    );
+  }
+}
+
+var frfunction = FRFunction();

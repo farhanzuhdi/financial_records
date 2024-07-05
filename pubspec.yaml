@@ -7,9 +7,16 @@ environment:
   sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
+  dropdown_button2: ^2.3.9
   firebase_core: ^3.1.1
+  firebase_database: ^11.0.2
   flutter:
     sdk: flutter
+  intl: ^0.19.0
+  loading_animation_widget: ^1.2.1
+  money_formatter: ^0.0.6
+  provider: ^6.1.2
+  top_snackbar_flutter: ^3.1.0
 
 dev_dependencies:
   flutter_test:
