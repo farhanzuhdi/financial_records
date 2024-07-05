@@ -20,15 +20,7 @@ class DashboardScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                    onPressed: () {
-                      if (dashboardState.dropdownCategory.isEmpty ||
-                          dashboardState.dropdownMonth.isEmpty ||
-                          dashboardState.dropdownYear.isEmpty) {
-                        return;
-                      } else {
-                        showFilter(context, dashboardState);
-                      }
-                    },
+                    onPressed: () => dashboardState.showFilter(context),
                     icon: const Icon(
                       Icons.view_list_rounded,
                       color: Colors.white,
@@ -178,125 +170,6 @@ class DashboardScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  showFilter(BuildContext context, DashboardState dashboardState) {
-    showModalBottomSheet(
-      isDismissible: false,
-      context: context,
-      builder: ((context) {
-        return SizedBox(
-          height: 327.5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.close_rounded,
-                      color: Colors.transparent,
-                    ),
-                  ),
-                  const Text(
-                    'Lihat Data',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-                  ),
-                  IconButton(
-                    onPressed: () => dashboardState.closeFilterModal(),
-                    icon: const Icon(Icons.close_rounded),
-                  )
-                ],
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16.0),
-                height: 55.0,
-                child: DropdownMenu(
-                  inputDecorationTheme: const InputDecorationTheme(
-                      border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0)),
-                  expandedInsets: const EdgeInsets.symmetric(horizontal: 16.0),
-                  dropdownMenuEntries: dashboardState.dropdownCategory
-                      .map(
-                        (value) =>
-                            DropdownMenuEntry(value: value, label: value.name),
-                      )
-                      .toList(),
-                  label: const Text("Siapa?"),
-                  controller: dashboardState.categorySearch,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16.0),
-                height: 55.0,
-                child: DropdownMenu(
-                  inputDecorationTheme: const InputDecorationTheme(
-                      border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0)),
-                  expandedInsets: const EdgeInsets.symmetric(horizontal: 16.0),
-                  dropdownMenuEntries: dashboardState.dropdownMonth
-                      .map(
-                        (value) =>
-                            DropdownMenuEntry(value: value, label: value.name),
-                      )
-                      .toList(),
-                  label: const Text("Bulan?"),
-                  controller: dashboardState.monthSearch,
-                  onSelected: dashboardState.selectMonth,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16.0),
-                height: 55.0,
-                child: DropdownMenu(
-                  inputDecorationTheme: const InputDecorationTheme(
-                      border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0)),
-                  expandedInsets: const EdgeInsets.symmetric(horizontal: 16.0),
-                  dropdownMenuEntries: dashboardState.dropdownYear
-                      .map(
-                        (value) =>
-                            DropdownMenuEntry(value: value, label: value),
-                      )
-                      .toList(),
-                  label: const Text("Tahun?"),
-                  controller: dashboardState.yearSearch,
-                ),
-              ),
-              Container(
-                margin:
-                    const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
-                height: 50.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(width: 0.5, color: Colors.grey),
-                  color: Colors.blueAccent[700],
-                ),
-                child: TextButton.icon(
-                  onPressed: () => dashboardState.toList(),
-                  icon: const Icon(
-                    Icons.manage_search_rounded,
-                    color: Colors.white,
-                  ),
-                  label: const Text(
-                    "Cari",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
-            ],
-          ),
-        );
-      }),
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:financial_records/core/fr_function.dart';
 import 'package:financial_records/core/fr_models.dart/dropdown_item.dart';
 import 'package:financial_records/core/fr_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class DashboardState with ChangeNotifier {
   BuildContext context;
@@ -26,7 +25,6 @@ class DashboardState with ChangeNotifier {
 
   getData() async {
     dropdownCategory = await frfunction.getListCategory(context);
-
     if (!context.mounted) return;
     dropdownType = await frfunction.getListType(context);
     if (!context.mounted) return;
@@ -72,6 +70,7 @@ class DashboardState with ChangeNotifier {
   }
 
   saveData() async {
+    frfunction.showLoadingDialog(context);
     if (category != null &&
         type != null &&
         nominalText != null &&
@@ -105,6 +104,8 @@ class DashboardState with ChangeNotifier {
       frfunction.snackbarWarning(
           context: context, message: "Tolong, isi semua data!");
     }
+    if (!context.mounted) return;
+    frfunction.closeLoadingDialog(context);
   }
 
   closeFilterModal() {
@@ -113,5 +114,138 @@ class DashboardState with ChangeNotifier {
     yearSearch.clear();
     frnavigation.back(context: context);
     notifyListeners();
+  }
+
+  showFilter(BuildContext context) async {
+    if (dropdownCategory.isEmpty ||
+        dropdownMonth.isEmpty ||
+        dropdownYear.isEmpty) {
+      frfunction.showLoadingDialog(context);
+      await getData();
+      if (!context.mounted) return;
+      frfunction.closeLoadingDialog(context);
+      showFilter(context);
+    } else {
+      showModalBottomSheet(
+        isDismissible: false,
+        context: context,
+        builder: ((context) {
+          return SizedBox(
+            height: 327.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: Colors.transparent,
+                      ),
+                    ),
+                    const Text(
+                      'Lihat Data',
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                    ),
+                    IconButton(
+                      onPressed: () => closeFilterModal(),
+                      icon: const Icon(Icons.close_rounded),
+                    )
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 16.0),
+                  height: 55.0,
+                  child: DropdownMenu(
+                    inputDecorationTheme: const InputDecorationTheme(
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0)),
+                    expandedInsets:
+                        const EdgeInsets.symmetric(horizontal: 16.0),
+                    dropdownMenuEntries: dropdownCategory
+                        .map(
+                          (value) => DropdownMenuEntry(
+                              value: value, label: value.name),
+                        )
+                        .toList(),
+                    label: const Text("Siapa?"),
+                    controller: categorySearch,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 16.0),
+                  height: 55.0,
+                  child: DropdownMenu(
+                    inputDecorationTheme: const InputDecorationTheme(
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0)),
+                    expandedInsets:
+                        const EdgeInsets.symmetric(horizontal: 16.0),
+                    dropdownMenuEntries: dropdownMonth
+                        .map(
+                          (value) => DropdownMenuEntry(
+                              value: value, label: value.name),
+                        )
+                        .toList(),
+                    label: const Text("Bulan?"),
+                    controller: monthSearch,
+                    onSelected: selectMonth,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 16.0),
+                  height: 55.0,
+                  child: DropdownMenu(
+                    inputDecorationTheme: const InputDecorationTheme(
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0)),
+                    expandedInsets:
+                        const EdgeInsets.symmetric(horizontal: 16.0),
+                    dropdownMenuEntries: dropdownYear
+                        .map(
+                          (value) =>
+                              DropdownMenuEntry(value: value, label: value),
+                        )
+                        .toList(),
+                    label: const Text("Tahun?"),
+                    controller: yearSearch,
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(width: 0.5, color: Colors.grey),
+                    color: Colors.blueAccent[700],
+                  ),
+                  child: TextButton.icon(
+                    onPressed: () => toList(),
+                    icon: const Icon(
+                      Icons.manage_search_rounded,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      "Cari",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        }),
+      );
+    }
   }
 }

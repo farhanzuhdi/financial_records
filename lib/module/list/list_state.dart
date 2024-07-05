@@ -22,8 +22,11 @@ class ListState with ChangeNotifier {
   }
 
   getData() async {
+    frfunction.showLoadingDialog(context);
     listItem = await frfunction.getListData(
         context: context, month: month, year: year, categoryName: categoryName);
     notifyListeners();
+    if (!context.mounted) return;
+    frfunction.closeLoadingDialog(context);
   }
 }

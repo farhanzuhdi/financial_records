@@ -214,6 +214,26 @@ class FRFunction {
       animationDuration: const Duration(milliseconds: 3000),
     );
   }
+
+  showLoadingDialog(context) {
+    Future.delayed(const Duration(milliseconds: 10), () {
+      return showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return SizedBox(
+              child: LoadingAnimationWidget.hexagonDots(
+                  color: Colors.grey.shade200, size: 50),
+            );
+          });
+    });
+  }
+
+  closeLoadingDialog(BuildContext context) {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      Navigator.of(context).pop();
+    });
+  }
 }
 
 var frfunction = FRFunction();
