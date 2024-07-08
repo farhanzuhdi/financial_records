@@ -4,7 +4,6 @@ import 'package:financial_records/core/fr_models.dart/dropdown_item.dart';
 import 'package:financial_records/core/fr_models.dart/list_item.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:money_formatter/money_formatter.dart';
@@ -191,6 +190,26 @@ class FRFunction {
 
   String datetoDayFormat(DateTime date) {
     return DateFormat.EEEE('id_ID').format(date);
+  }
+
+  String remainingBalanceFormat(List<ItemList> list) {
+    if (list.isEmpty) {
+      return "0";
+    } else {
+      int total = 0;
+      for (int i = 0; i < list.length; i++) {
+        if (list[i].type.id == '1') {
+          total -= int.parse(list[i].nominal);
+        } else {
+          total += int.parse(list[i].nominal);
+        }
+      }
+      return moneyFormatter(total.toString());
+    }
+  }
+
+  String formatTime(String value) {
+    return value.length > 1 ? value : '0$value';
   }
 
   void snackbarSuccess(
