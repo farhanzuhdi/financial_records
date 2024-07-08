@@ -165,7 +165,7 @@ class FRFunction {
     for (int i = 0; i < 10; i++) {
       result.add((DateTime.now().year - i).toString());
     }
-    return result;
+    return result.reversed.toList();
   }
 
   Future<List<ItemDropdown>> getMonth(BuildContext context) async {
