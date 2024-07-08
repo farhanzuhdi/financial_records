@@ -189,6 +189,10 @@ class FRFunction {
     }
   }
 
+  String datetoDayFormat(DateTime date) {
+    return DateFormat.EEEE('id_ID').format(date);
+  }
+
   void snackbarSuccess(
       {required BuildContext context, required String message}) {
     showTopSnackBar(

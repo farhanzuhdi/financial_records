@@ -58,7 +58,7 @@ class ListScreen extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      data.date.day.toString(),
+                                      '${data.date.day.toString()}, ${frfunction.datetoDayFormat(data.date)}',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16.0),
