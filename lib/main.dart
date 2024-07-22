@@ -1,3 +1,4 @@
+import 'package:financial_records/core/fr_string.dart';
 import 'package:financial_records/module/dashboard/dashboard_screen.dart';
 import 'package:financial_records/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,9 +6,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -18,6 +21,7 @@ void main() async {
     description: 'This channel is used for important notifications.',
     importance: Importance.max,
   );
+  OneSignal.initialize(frstring.oneSignalId);
 
   await messaging.requestPermission(
     alert: true,
@@ -55,6 +59,10 @@ void main() async {
   });
 
   initializeDateFormatting('id_ID', null).then((_) => runApp(const App()));
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
 }
 
 class App extends StatelessWidget {

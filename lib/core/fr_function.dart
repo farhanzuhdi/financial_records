@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:financial_records/core/fr_models.dart/dropdown_item.dart';
 import 'package:financial_records/core/fr_models.dart/list_item.dart';
+import 'package:financial_records/core/fr_string.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:money_formatter/money_formatter.dart';
@@ -256,6 +258,26 @@ class FRFunction {
     Future.delayed(const Duration(milliseconds: 100), () {
       Navigator.of(context).pop();
     });
+  }
+
+  sendNotification(String title, String body) async {
+    await post(
+      Uri.parse('https://onesignal.com/api/v1/notifications'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Basic ${frstring.restApiKey}',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "app_id": frstring.oneSignalId,
+        "included_segments": ["Active Subscriptions"],
+        "target_channel": "push",
+        "android_accent_color": "FF9976D2",
+        "small_icon": "@mipmap/fire_icon",
+        "large_icon": "@mipmap/fire_icon",
+        "headings": {"en": title},
+        "contents": {"en": body},
+      }),
+    );
   }
 }
 

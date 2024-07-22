@@ -84,6 +84,8 @@ class DashboardState with ChangeNotifier {
             nominal: nominalText!,
             notes: notes.text);
         if (result) {
+          frfunction.sendNotification('${category!.name} ${type!.name}',
+              'Rp ${frfunction.moneyFormatter(nominalText!)} ${type!.id == '1' ? 'Untuk' : 'Dari'} ${notes.text}');
           if (!context.mounted) return;
           FocusScope.of(context).unfocus();
           frfunction.snackbarSuccess(
