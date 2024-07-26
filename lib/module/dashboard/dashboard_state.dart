@@ -46,6 +46,8 @@ class DashboardState with ChangeNotifier {
       }
     } else {
       showSpendingCategory = false;
+      spendingCategory = null;
+      spendingCategoryText.text = '';
     }
     notifyListeners();
   }
@@ -60,6 +62,8 @@ class DashboardState with ChangeNotifier {
       }
     } else {
       showSpendingCategory = false;
+      spendingCategory = null;
+      spendingCategoryText.text = '';
     }
     notifyListeners();
   }
@@ -113,11 +117,12 @@ class DashboardState with ChangeNotifier {
             context: context,
             category: category!,
             type: type!,
+            spendingCategory: spendingCategory,
             nominal: nominalText!,
             notes: notes.text);
         if (result) {
-          frfunction.sendNotification('${category!.name} ${type!.name}',
-              'Rp ${frfunction.moneyFormatter(nominalText!)} ${type!.id == '1' ? 'Untuk' : 'Dari'} ${notes.text}');
+          // frfunction.sendNotification('${category!.name} ${type!.name}',
+          //     'Rp ${frfunction.moneyFormatter(nominalText!)} ${type!.id == '1' ? 'Untuk' : 'Dari'} ${notes.text}');
           if (!context.mounted) return;
           FocusScope.of(context).unfocus();
           frfunction.snackbarSuccess(
@@ -132,6 +137,7 @@ class DashboardState with ChangeNotifier {
           spendingCategoryText.text = '';
           spendingCategory = null;
           showSpendingCategory = false;
+          notifyListeners();
         }
       } catch (e) {
         if (!context.mounted) return;

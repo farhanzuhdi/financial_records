@@ -124,6 +124,7 @@ class FRFunction {
       {required BuildContext context,
       required ItemDropdown category,
       required ItemDropdown type,
+      required ItemDropdown? spendingCategory,
       required String nominal,
       required String notes}) async {
     DatabaseReference databaseReferenceData =
@@ -131,13 +132,24 @@ class FRFunction {
     DateTime nowFormat = DateTime.now();
     var formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(nowFormat);
     try {
-      await databaseReferenceData.child('$formattedDate ${category.id}').set({
-        'date': formattedDate,
-        'category': category.toJson(),
-        'type': type.toJson(),
-        'nominal': nominal,
-        'notes': notes
-      });
+      if (spendingCategory == null) {
+        await databaseReferenceData.child('$formattedDate ${category.id}').set({
+          'date': formattedDate,
+          'category': category.toJson(),
+          'type': type.toJson(),
+          'nominal': nominal,
+          'notes': notes
+        });
+      } else {
+        await databaseReferenceData.child('$formattedDate ${category.id}').set({
+          'date': formattedDate,
+          'category': category.toJson(),
+          'type': type.toJson(),
+          'spending_category': spendingCategory.toJson(),
+          'nominal': nominal,
+          'notes': notes
+        });
+      }
       return true;
     } catch (e) {
       snackbarError(
@@ -214,22 +226,6 @@ class FRFunction {
 
   String datetoDayFormat(DateTime date) {
     return DateFormat.EEEE('id_ID').format(date);
-  }
-
-  String remainingBalanceFormat(List<ItemList> list) {
-    if (list.isEmpty) {
-      return "0";
-    } else {
-      int total = 0;
-      for (int i = 0; i < list.length; i++) {
-        if (list[i].type.id == '1') {
-          total -= int.parse(list[i].nominal);
-        } else {
-          total += int.parse(list[i].nominal);
-        }
-      }
-      return moneyFormatter(total.toString());
-    }
   }
 
   String formatTime(String value) {
