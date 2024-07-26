@@ -8,16 +8,19 @@ class DashboardState with ChangeNotifier {
   List dropdownCategory = [],
       dropdownType = [],
       dropdownMonth = [],
-      dropdownYear = [];
-  ItemDropdown? category, type, month;
+      dropdownYear = [],
+      dropdownSpendingCategory = [];
+  ItemDropdown? category, type, month, spendingCategory;
   String? nominalText;
   TextEditingController nominal = TextEditingController();
   TextEditingController notes = TextEditingController();
   TextEditingController categoryText = TextEditingController();
   TextEditingController typeText = TextEditingController();
+  TextEditingController spendingCategoryText = TextEditingController();
   TextEditingController categorySearch = TextEditingController();
   TextEditingController monthSearch = TextEditingController();
   TextEditingController yearSearch = TextEditingController();
+  bool showSpendingCategory = false;
 
   DashboardState({required this.context}) {
     getData();
@@ -33,12 +36,36 @@ class DashboardState with ChangeNotifier {
     notifyListeners();
   }
 
-  selectCategory(value) {
+  selectCategory(value) async {
     category = value;
+    if (category!.id != '3' && type != null && type!.id == '1') {
+      showSpendingCategory = true;
+      if (dropdownSpendingCategory.isEmpty) {
+        dropdownSpendingCategory =
+            await frfunction.getListSpendingCategory(context);
+      }
+    } else {
+      showSpendingCategory = false;
+    }
+    notifyListeners();
   }
 
-  selectType(value) {
+  selectType(value) async {
     type = value;
+    if (type!.id == '1' && category != null && category!.id != '3') {
+      showSpendingCategory = true;
+      if (dropdownSpendingCategory.isEmpty) {
+        dropdownSpendingCategory =
+            await frfunction.getListSpendingCategory(context);
+      }
+    } else {
+      showSpendingCategory = false;
+    }
+    notifyListeners();
+  }
+
+  selectSpending(value) {
+    spendingCategory = value;
   }
 
   selectMonth(value) {
@@ -76,6 +103,11 @@ class DashboardState with ChangeNotifier {
         nominalText != null &&
         nominal.text != '' &&
         notes.text != '') {
+      if (type!.id == '1' && category!.id != '3' && spendingCategory == null) {
+        frfunction.closeLoadingDialog(context);
+        return frfunction.snackbarWarning(
+            context: context, message: "Tolong, isi semua data!");
+      }
       try {
         bool result = await frfunction.addData(
             context: context,
@@ -90,13 +122,16 @@ class DashboardState with ChangeNotifier {
           FocusScope.of(context).unfocus();
           frfunction.snackbarSuccess(
               context: context, message: 'Data berhasil disimpan');
-          category == null;
+          category = null;
           categoryText.text = '';
-          type == null;
+          type = null;
           typeText.text = '';
-          nominalText == null;
+          nominalText = null;
           nominal.text = '';
           notes.text = '';
+          spendingCategoryText.text = '';
+          spendingCategory = null;
+          showSpendingCategory = false;
         }
       } catch (e) {
         if (!context.mounted) return;

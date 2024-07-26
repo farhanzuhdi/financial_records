@@ -78,6 +78,32 @@ class DashboardScreen extends StatelessWidget {
                       onSelected: dashboardState.selectType,
                     ),
                   ),
+                  dashboardState.showSpendingCategory
+                      ? Container(
+                          margin: const EdgeInsets.only(top: 16.0),
+                          height: 55.0,
+                          child: DropdownMenu(
+                            inputDecorationTheme: const InputDecorationTheme(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(12.0))),
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 16.0)),
+                            expandedInsets:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            dropdownMenuEntries:
+                                dashboardState.dropdownSpendingCategory
+                                    .map(
+                                      (value) => DropdownMenuEntry(
+                                          value: value, label: value.name),
+                                    )
+                                    .toList(),
+                            label: const Text("Pengeluaran apa?"),
+                            controller: dashboardState.spendingCategoryText,
+                            onSelected: dashboardState.selectSpending,
+                          ),
+                        )
+                      : Container(),
                   Container(
                     margin: const EdgeInsets.all(16.0),
                     padding: const EdgeInsets.only(left: 8.0, right: 16.0),

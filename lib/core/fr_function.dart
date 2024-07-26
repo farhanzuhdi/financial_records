@@ -55,6 +55,28 @@ class FRFunction {
     }
   }
 
+  Future<List<ItemDropdown>> getListSpendingCategory(
+      BuildContext context) async {
+    DatabaseReference databaseReferenceType =
+        FirebaseDatabase.instance.ref().child('spending_category');
+    List<ItemDropdown> returnData = [];
+    try {
+      final data = databaseReferenceType.once();
+      await data.then((event) {
+        DataSnapshot dataSnapshot = event.snapshot;
+        for (var element in dataSnapshot.children) {
+          returnData.add(ItemDropdown(
+              id: element.key.toString(), name: element.value.toString()));
+        }
+      });
+      return returnData;
+    } catch (e) {
+      snackbarError(
+          context: !context.mounted ? context : context, message: e.toString());
+      return returnData;
+    }
+  }
+
   Future<List<ItemList>> getListData(
       {required BuildContext context,
       required String month,
