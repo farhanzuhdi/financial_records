@@ -44,104 +44,158 @@ class ListScreen extends StatelessWidget {
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 7.5, bottom: 7.5),
-                      decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
-                        border: Border(
-                            top: BorderSide(color: Colors.white, width: 1.0)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Sisa Saldo $categoryName :',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            'Rp ${frfunction.moneyFormatter(listState.remaining.toString())}',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500),
+                    listState.categoryName == 'Bareng'
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 20.0),
+                            decoration: const BoxDecoration(
+                              color: Colors.indigoAccent,
+                              border: Border(
+                                  top: BorderSide(
+                                      color: Colors.white, width: 1.0)),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(32.0),
+                                  bottomRight: Radius.circular(32.0)),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Sisa Saldo $categoryName :',
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  'Rp ${frfunction.moneyFormatter(listState.remaining.toString())}',
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 2.5, bottom: 7.5),
-                      decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Kebutuhan :',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15.0),
+                        : Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    left: 16.0,
+                                    right: 16.0,
+                                    top: 7.5,
+                                    bottom: 7.5),
+                                decoration: const BoxDecoration(
+                                  color: Colors.indigoAccent,
+                                  border: Border(
+                                      top: BorderSide(
+                                          color: Colors.white, width: 1.0)),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Sisa Saldo $categoryName :',
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Text(
+                                      'Rp ${frfunction.moneyFormatter(listState.remaining.toString())}',
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    left: 16.0,
+                                    right: 16.0,
+                                    top: 2.5,
+                                    bottom: 5.0),
+                                decoration: const BoxDecoration(
+                                  color: Colors.indigoAccent,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Kebutuhan :',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15.0),
+                                    ),
+                                    Text(
+                                      'Rp ${frfunction.moneyFormatter(listState.necessary.toString())}',
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 15.0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    left: 16.0,
+                                    right: 16.0,
+                                    top: 2.5,
+                                    bottom: 5.0),
+                                decoration: const BoxDecoration(
+                                  color: Colors.indigoAccent,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Jajan :',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15.0),
+                                    ),
+                                    Text(
+                                      'Rp ${frfunction.moneyFormatter(listState.snack.toString())}',
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 15.0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    left: 16.0,
+                                    right: 16.0,
+                                    top: 2.5,
+                                    bottom: 7.5),
+                                margin: const EdgeInsets.only(bottom: 4.0),
+                                decoration: const BoxDecoration(
+                                  color: Colors.indigoAccent,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(32.0),
+                                      bottomRight: Radius.circular(32.0)),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Lainnya :',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15.0),
+                                    ),
+                                    Text(
+                                      'Rp ${frfunction.moneyFormatter(listState.other.toString())}',
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 15.0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'Rp ${frfunction.moneyFormatter(listState.necessary.toString())}',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15.0),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 2.5, bottom: 7.5),
-                      decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Jajan :',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15.0),
-                          ),
-                          Text(
-                            'Rp ${frfunction.moneyFormatter(listState.snack.toString())}',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15.0),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 2.5, bottom: 7.5),
-                      margin: const EdgeInsets.only(bottom: 4.0),
-                      decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(32.0),
-                            bottomRight: Radius.circular(32.0)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Lainnya :',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15.0),
-                          ),
-                          Text(
-                            'Rp ${frfunction.moneyFormatter(listState.other.toString())}',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15.0),
-                          )
-                        ],
-                      ),
-                    ),
                     Expanded(
                       child: ListView(
                         children: listState.listItem
