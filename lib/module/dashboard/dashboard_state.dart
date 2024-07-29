@@ -121,8 +121,8 @@ class DashboardState with ChangeNotifier {
             nominal: nominalText!,
             notes: notes.text);
         if (result) {
-          // frfunction.sendNotification('${category!.name} ${type!.name}',
-          //     'Rp ${frfunction.moneyFormatter(nominalText!)} ${type!.id == '1' ? 'Untuk' : 'Dari'} ${notes.text}');
+          frfunction.sendNotification('${category!.name} ${type!.name}',
+              'Rp ${frfunction.moneyFormatter(nominalText!)} ${type!.id == '1' ? 'Untuk' : 'Dari'} ${notes.text}');
           if (!context.mounted) return;
           FocusScope.of(context).unfocus();
           frfunction.snackbarSuccess(
@@ -163,10 +163,8 @@ class DashboardState with ChangeNotifier {
     if (dropdownCategory.isEmpty ||
         dropdownMonth.isEmpty ||
         dropdownYear.isEmpty) {
-      frfunction.showLoadingDialog(context);
       await getData();
       if (!context.mounted) return;
-      frfunction.closeLoadingDialog(context);
       showFilter(context);
     } else {
       showModalBottomSheet(
